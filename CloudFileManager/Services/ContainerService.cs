@@ -12,17 +12,22 @@ namespace CloudFileManager.Services
         {
             this.blobServiceClient = blobServiceClient;
         }
-        public Task CreateContainer(string name)
+        public async Task CreateContainer(string name)
         {
             BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(name);
-            blobContainerClient.CreateIfNotExists(PublicAccessType.BlobContainer);
-            return Task.CompletedTask;
+            await blobContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
         }
 
-        public List<string> GetAllContainers()
+        public async Task DeleteContainer(string name)
+        {
+            BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(name);
+            await blobContainerClient.DeleteIfExistsAsync();
+        }
+
+        public async Task<List<string>> GetAllContainers()
         {
             List<string> containers = new List<string>();
-            foreach (BlobContainerItem item in blobServiceClient.GetBlobContainers())
+            await foreach (BlobContainerItem item in blobServiceClient.GetBlobContainersAsync())
             {
                 containers.Add(item.Name);
             }

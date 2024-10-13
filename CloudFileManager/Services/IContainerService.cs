@@ -2,7 +2,10 @@
 {
     public interface IContainerService
     {
-        List<string> GetAllContainers();
+        Task<List<string>> GetAllContainers();
         Task CreateContainer(string name);
+
+        Task DeleteContainer(string name);
+
     }
 }
