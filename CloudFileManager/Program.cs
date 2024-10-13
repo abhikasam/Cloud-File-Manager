@@ -1,11 +1,14 @@
+using Azure.Storage.Blobs;
 using CloudFileManager.Services;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddSingleton<BlobStorageService>();
+builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("AzureStorage")));
+builder.Services.AddSingleton<IContainerService, ContainerService>();
 
 var app = builder.Build();
 
